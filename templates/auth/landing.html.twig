@@ -1,0 +1,38 @@
+{% extends 'baseNoAuth.html.twig' %}
+
+{% block title %}
+    Hello AuthController!
+{% endblock %}
+
+{% block body %}
+    
+    <div class="auth-container">
+        <h1 class="auth-title white">
+            Bienvenue sur TaskLinker
+        </h1>
+        <h2 class="auth-subtitle white">
+            Commencez dès maintenant - gratuitement
+            <h2>
+                <p class="auth-text white">
+                    Vous avez déja un compte?
+                </p>
+                <div class="auth-container-btn">
+                <button class="btn connect-btn" onclick="window.location.href='{{ path('app_auth') }}'">
+                Se connecter
+            </button>
+            
+                   
+                    <div class="auth-separator">
+                        <span class="line"></span>
+                        <span class="auth-text white">
+                            OU
+                        </span>
+                        <span class="line"></span>
+                    </div>
+                    <button class="btn signup-btn" onclick="window.location.href='{{ path('app_register') }}'">
+                        S'inscrire
+                    </button>
+                </div>
+            </div>
+        {% endblock %}
+        

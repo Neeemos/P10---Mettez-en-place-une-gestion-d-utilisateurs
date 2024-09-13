@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Créer une tâche
+{% endblock %}
+{% block header_title %}
+    Créer une tâche
+{% endblock %}
+{% block body %}
+    <div id="content">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}
+    ) }}
+        {{ form_widget(form) }}
+        {% if taskId is not null %}
+            <a href="{{ path('project_task_remove', {'id': id, 'taskId': taskId}) }}" class="delete-task">
+                Supprimer la tâche
+            </a>
+        {% endif %}
+        {{ form_end(form) }}
+        
+    
+    </div>
+{% endblock %}

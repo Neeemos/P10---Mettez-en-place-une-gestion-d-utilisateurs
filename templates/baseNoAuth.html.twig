@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width; initial-scale=1" />
+        <title>
+        {% block title %}{% endblock %} - TaskLinker
+        </title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div id="main-container-public" class="main-container-public">
+            <nav class="nav-public">
+                <a href="{{ path('project_index') }}"" id="logo">
+                    <img src="{{ asset('img/logo.png') }}" alt="Logo TaskLinker" />
+                </a>
+            </nav>
+                {% block body %}{% endblock %}
+                 
+                {% block javascripts %}
+                    {% block importmap %}
+                        {{ importmap('app') }}
+                    {% endblock %}
+                {% endblock %}
+                </main>
+            </body>
+        </html>
+    </body>
+</html>
