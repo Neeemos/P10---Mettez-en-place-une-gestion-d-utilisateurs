@@ -1,7 +1,7 @@
 ![logo]
-# OC - P8 -  TaskLinker  !
+# OC - P10 -  TaskLinker Auth  !
 
-Guillaume, notre stagiaire, a fait un prototype de l’outil en HTML et CSS, qui a été validé en interne. II faudrait que tu t'appuies dessus pour réaliser l’outil.
+Cet exercice vise donc à vous faire compléter l’outil TaskLinker, sur lequel vous avez déjà bien travaillé. L’objectif sera d’ajouter une couche de sécurité avec une authentification et des vérifications d’accès. À l’issue de cet exercice, votre site sera complet et 100 % fonctionnel. 
 
 ## Installation 
 
