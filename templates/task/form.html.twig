@@ -10,7 +10,7 @@
     {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}
     ) }}
         {{ form_widget(form) }}
-        {% if taskId is not null %}
+        {% if taskId is not null and is_granted('ROLE_ADMIN') %}
             <a href="{{ path('project_task_remove', {'id': id, 'taskId': taskId}) }}" class="delete-task">
                 Supprimer la tâche
             </a>

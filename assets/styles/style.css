@@ -267,6 +267,11 @@ div#projects-container {
   background: #1c5b50;
   border: 1px solid lightgray;
 }
+.white_end {
+  margin-left: auto;
+  background-color: white;
+  text-decoration: none;
+}
 
 .user-list {
   display: flex;

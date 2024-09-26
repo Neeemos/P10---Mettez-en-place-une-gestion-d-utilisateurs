@@ -11,9 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\ProjectRepository;
 use App\Entity\Project;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProjectController extends AbstractController
 {
+
     #[Route('/', name: 'project_index', methods: ['GET'])]
     public function index(request $request, ProjectRepository $projectRepository): Response
     {
