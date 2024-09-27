@@ -56,5 +56,4 @@ when@test:
                     ROLE_USER: ~
                     ROLE_MODERATEUR: ROLE_USER
                     ROLE_AJOUT_DE_LIVRE: ROLE_USER
-                    ROLE_EDITION_DE_LIVRE: ROLE_AJOUT_DE_LIVRE
-                    ROLE_ADMIN: [ROLE_MODERATEUR, ROLE_EDITION_DE_LIVRE]
+                    ROLE_ADMIN: [ROLE_MODERATEUR]

@@ -8,7 +8,7 @@ use App\Entity\Project;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class ProjectUserFixture extends Fixture
+class ProjectUserFixtures extends Fixture
 {
     private ObjectManager $manager;
 

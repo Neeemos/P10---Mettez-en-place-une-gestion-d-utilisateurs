@@ -80,7 +80,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->tasks = new ArrayCollection();
         $this->date = new \DateTime();
         $this->status = 'CDD';
-        $this->roles = ['ROLE_USER'];
     }
 
     public function getId(): ?int
