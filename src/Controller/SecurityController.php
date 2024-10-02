@@ -24,7 +24,6 @@ class SecurityController extends AbstractController
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
-            'current_route' => $request->attributes->get('_route'),
             'is_registration' => false,
             'controller_name' => 'AuthControllerLogin',
             'error' => $error,
@@ -38,19 +37,13 @@ class SecurityController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-        $plainPassword = $form->get('plainPassword')->getData();
-        $vPassword = $form->get('vPassword')->getData();
-        if ($plainPassword !== $vPassword) {
-            // Add an error message to the form
-            $form->get('vPassword')->addError(new FormError('The password and confirmation do not match.'));
-        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $form->get('password')->getData()
                 )
             );
 
@@ -64,7 +57,6 @@ class SecurityController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
-            'current_route' => $request->attributes->get('_route'),
         ]);
     }
 
@@ -79,7 +71,6 @@ class SecurityController extends AbstractController
     public function dispatch(request $request): Response
     {
         return $this->render('./auth/landing.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'controller_name' => 'AuthController',
         ]);
     }

@@ -22,7 +22,6 @@ class ProjectController extends AbstractController
         $projects = $projectRepository->findAll();
 
         return $this->render('project/index.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'projects' => $projects
         ]);
     }
@@ -41,7 +40,6 @@ class ProjectController extends AbstractController
             return $this->redirectToRoute('project_index');
         }
         return $this->render('project/form.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'form' => $form
         ]);
     }
@@ -58,7 +56,6 @@ class ProjectController extends AbstractController
         }
 
         return $this->render('project/form.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'form' => $form->createView(),
         ]);
     }
@@ -85,7 +82,6 @@ class ProjectController extends AbstractController
         }
 
         return $this->render('project/project.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'id' => $project->getId(),
             'project' => $project,
             'tasks' => $tasks

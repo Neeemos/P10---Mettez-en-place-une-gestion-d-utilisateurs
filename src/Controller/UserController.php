@@ -18,7 +18,6 @@ class UserController extends AbstractController
     {
         $userList = $userRepository->findAll();
         return $this->render('user/index.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'user_list' => $userList
         ]);
     }
@@ -37,7 +36,6 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/user.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'form' => $form->createView(),
             'user' => $user
         ]);

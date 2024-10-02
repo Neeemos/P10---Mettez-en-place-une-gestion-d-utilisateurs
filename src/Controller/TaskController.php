@@ -35,7 +35,6 @@ class TaskController extends AbstractController
         }
 
         return $this->render('task/form.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'id' => $project->getId(),
             'taskId' => $task->getId(),
             'statut' => $statut,
@@ -60,7 +59,6 @@ class TaskController extends AbstractController
         }
 
         return $this->render('task/form.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'id' => $project->getId(),
             'taskId' => $taskId,
             'statut' => $task->getStatus(),

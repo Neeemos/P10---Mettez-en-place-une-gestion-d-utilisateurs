@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -23,31 +23,15 @@ class RegistrationFormType extends AbstractType
             ->add('surname', TextType::class, [
                 'label' => 'Prénom',
             ])
-            ->add('email')
+            ->add('email')  
 
-            ->add('plainPassword', PasswordType::class, [
-                // This field is not mapped to the User entity
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        'max' => 4096,
-                    ]),
-                ],
-            ])
-            ->add('vPassword', PasswordType::class, [
-                'label' => 'Confirmation mot de passe',
-                'mapped' => false, // Ensure this is not mapped to the User entity
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please confirm your password',
-                    ]),
-                ],
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'The password fields must match.',
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true,
+                'first_options' => ['label' => 'Password'],
+                'second_options' => ['label' => 'Repeat Password'],
             ]);
     }
 
