@@ -1,7 +1,7 @@
 {% extends 'baseNoAuth.html.twig' %}
 
 {% block title %}
-    Hello AuthController!
+    Welcome ! 
 {% endblock %}
 
 {% block body %}
@@ -17,7 +17,7 @@
                     Vous avez déja un compte?
                 </p>
                 <div class="auth-container-btn">
-                <button class="btn connect-btn" onclick="window.location.href='{{ path('app_login') }}'">
+                <button class="btn connect-btn" onclick="window.location.href='{{ path('app_security_login') }}'">
                 Se connecter
             </button>
             
@@ -29,7 +29,7 @@
                         </span>
                         <span class="line"></span>
                     </div>
-                    <button class="btn signup-btn" onclick="window.location.href='{{ path('app_register') }}'">
+                    <button class="btn signup-btn" onclick="window.location.href='{{ path('app_security_register') }}'">
                         S'inscrire
                     </button>
                 </div>

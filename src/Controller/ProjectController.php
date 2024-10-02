@@ -30,6 +30,8 @@ class ProjectController extends AbstractController
     #[Route('/project/form/', name: 'project_form', methods: ['GET', 'POST'])]
     public function projectFormAdd(request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $project = new Project();
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
@@ -46,6 +48,7 @@ class ProjectController extends AbstractController
     #[Route('/project/form/{id}', name: 'project_form_id',  methods: ['GET', 'POST']) ]
     public function projectFormEdit(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
@@ -63,6 +66,8 @@ class ProjectController extends AbstractController
     #[Route('/project/remove/{id}', name: 'project_remove',  methods: ['GET', 'POST'])]
     public function projectRemove(Project $project, EntityManagerInterface $entityManagerInterface): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         if (!$project) {
             throw $this->createNotFoundException('Car not found');
         }

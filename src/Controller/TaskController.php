@@ -27,6 +27,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
             $task->setProject($project);
             $entityManager->persist($task);
             $entityManager->flush();
@@ -68,6 +69,7 @@ class TaskController extends AbstractController
     #[Route('/task/{id}/{taskId}/remove', name: 'project_task_remove', methods: ['POST', 'GET'])]
     public function taskRemove(Project $project, int $taskId, TaskRepository $repository, EntityManagerInterface $entityManagerInterface): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $task = $repository->find($taskId);
 
         if (!$task || $task->getProject()->getId() != $project->getId()) {

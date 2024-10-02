@@ -7,16 +7,21 @@
 {% endblock %}
 {% block body %}
     <div id="content">
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}
-    ) }}
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}
+        ) }}
         {{ form_widget(form) }}
         {% if taskId is not null and is_granted('ROLE_ADMIN') %}
+            <button type="submit" class="button button-submit">
+                Modifier
+            </button>
             <a href="{{ path('project_task_remove', {'id': id, 'taskId': taskId}) }}" class="delete-task">
                 Supprimer la tâche
             </a>
+        {% elseif app.request.attributes.get('_route') == 'project_task_add' and is_granted('ROLE_ADMIN') %}
+            <button type="submit" class="button button-submit">
+                Ajouter
+            </button>
         {% endif %}
         {{ form_end(form) }}
-        
-    
     </div>
 {% endblock %}

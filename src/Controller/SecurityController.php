@@ -13,7 +13,16 @@ use App\Form\RegistrationFormType;
 use App\Entity\User;
 class SecurityController extends AbstractController
 {
-    #[Route(path: '/login', name: 'app_login')]
+    
+    #[Route('/landing', name: 'app_security_dispatch')]
+    public function dispatch(request $request): Response
+    {
+        return $this->render('./auth/landing.html.twig', [
+            'controller_name' => 'AuthController',
+        ]);
+    }
+    
+    #[Route(path: '/login', name: 'app_security_login')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
         // get the login error if there is one
@@ -31,7 +40,7 @@ class SecurityController extends AbstractController
     }
 
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/register', name: 'app_security_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
@@ -52,7 +61,7 @@ class SecurityController extends AbstractController
 
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_security_login');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -67,11 +76,4 @@ class SecurityController extends AbstractController
     }
 
 
-    #[Route('/landing', name: 'app_dispatch')]
-    public function dispatch(request $request): Response
-    {
-        return $this->render('./auth/landing.html.twig', [
-            'controller_name' => 'AuthController',
-        ]);
-    }
 }
