@@ -12,17 +12,27 @@ use App\Repository\ProjectRepository;
 use App\Entity\Project;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Core\Security;
 
 class ProjectController extends AbstractController
 {
 
     #[Route('/', name: 'project_index', methods: ['GET'])]
-    public function index(request $request, ProjectRepository $projectRepository): Response
+    public function index(ProjectRepository $projectRepository): Response
     {
-        $projects = $projectRepository->findAll();
+        $user = $this->getUser(); // Récupère l'utilisateur connecté
+
+        // Vérification des rôles
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            // Si l'utilisateur est admin, on récupère tous les projets
+            $projects = $projectRepository->findAll();
+        } else {
+            // Sinon, on récupère les projets associés à l'utilisateur
+            $projects = $projectRepository->findByUser($user);
+        }
 
         return $this->render('project/index.html.twig', [
-            'projects' => $projects
+            'projects' => $projects,
         ]);
     }
 
@@ -48,7 +58,10 @@ class ProjectController extends AbstractController
     #[Route('/project/form/{id}', name: 'project_form_id',  methods: ['GET', 'POST']) ]
     public function projectFormEdit(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if (!$this->isGranted('acces_projet', null)) {
+            throw $this->createNotFoundException('You can not edit this project');
+        }
+
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
