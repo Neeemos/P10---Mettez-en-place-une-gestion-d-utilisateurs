@@ -12,7 +12,7 @@ use App\Repository\ProjectRepository;
 use App\Entity\Project;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Security\Core\Security;
+
 
 class ProjectController extends AbstractController
 {
@@ -58,8 +58,8 @@ class ProjectController extends AbstractController
     #[Route('/project/form/{id}', name: 'project_form_id',  methods: ['GET', 'POST']) ]
     public function projectFormEdit(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('acces_projet', null)) {
-            throw $this->createNotFoundException('You can not edit this project');
+        if (!$this->isGranted('acces_projet', $project)) {
+            throw $this->createNotFoundException('You cannot edit this project');
         }
 
         $form = $this->createForm(ProjectType::class, $project);
@@ -91,8 +91,10 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/project/manager/{id}', name: 'project_id',  methods: ['GET', 'POST'])]
-    public function projectFind(request $request, Project $project, TaskRepository $TaskRepository): Response
+    #[IsGranted('acces_projet', subject: 'project')]
+    public function projectFind(Project $project, TaskRepository $TaskRepository): Response
     {
+
         $tasks = $TaskRepository->findBy(['project' => $project->getId()]);
 
         if (!$project) {
