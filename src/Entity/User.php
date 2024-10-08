@@ -13,11 +13,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleAuthenticatorTwoFactorInterface;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, GoogleAuthenticatorTwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -50,7 +52,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: "Le status ne peut pas être vide")]
     private ?string $status;
 
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotNull(message: "La date ne peut pas être vide.")]
     private ?\DateTimeInterface $date = null;
@@ -73,6 +74,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user')]
     private Collection $tasks;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $google_authenticator = null;
 
     public function __construct()
     {
@@ -254,5 +258,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getGoogleAuthenticator(): ?string
+    {
+        return $this->google_authenticator;
+    }
+
+    public function setGoogleAuthenticator(?string $google_authenticator): static
+    {
+        $this->google_authenticator = $google_authenticator;
+
+        return $this;
+    }
+    public function isGoogleAuthenticatorEnabled(): bool
+    {
+        return null !== $this->google_authenticator;
+    }
+    public function getGoogleAuthenticatorUsername(): string
+    {
+        return $this->getEmail(); 
+    }
+
+    public function getGoogleAuthenticatorSecret(): string
+    {
+        return $this->getGoogleAuthenticator(); 
     }
 }

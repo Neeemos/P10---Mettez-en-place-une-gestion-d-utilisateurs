@@ -11,6 +11,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Form\RegistrationFormType;
 use App\Entity\User;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
+
 class SecurityController extends AbstractController
 {
     
@@ -21,7 +28,7 @@ class SecurityController extends AbstractController
             'controller_name' => 'AuthController',
         ]);
     }
-    
+
     #[Route(path: '/login', name: 'app_security_login')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
@@ -33,7 +40,6 @@ class SecurityController extends AbstractController
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
-            'is_registration' => false,
             'controller_name' => 'AuthControllerLogin',
             'error' => $error,
         ]);
@@ -41,12 +47,12 @@ class SecurityController extends AbstractController
 
 
     #[Route('/register', name: 'app_security_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, GoogleAuthenticatorInterface $googleAuth): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -55,19 +61,22 @@ class SecurityController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
-
+    
+            // Générer et stocker le secret Google Authenticator
+            $user->setGoogleAuthenticator($googleAuth->generateSecret());
+    
             $entityManager->persist($user);
             $entityManager->flush();
-
-            // do anything else you need here, like send an email
-
-            return $this->redirectToRoute('app_security_login');
+    
+            // Rediriger vers la page d'activation de la 2FA
+            return $this->redirectToRoute('2fa_login');
         }
-
+    
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
     }
+    
 
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
