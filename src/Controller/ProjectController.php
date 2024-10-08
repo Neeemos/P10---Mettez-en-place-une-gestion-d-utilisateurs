@@ -11,24 +11,38 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\ProjectRepository;
 use App\Entity\Project;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 class ProjectController extends AbstractController
 {
+
     #[Route('/', name: 'project_index', methods: ['GET'])]
-    public function index(request $request, ProjectRepository $projectRepository): Response
+    public function index(ProjectRepository $projectRepository): Response
     {
-        $projects = $projectRepository->findAll();
+        $user = $this->getUser(); // Récupère l'utilisateur connecté
+
+        // Vérification des rôles
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            // Si l'utilisateur est admin, on récupère tous les projets
+            $projects = $projectRepository->findAll();
+        } else {
+            // Sinon, on récupère les projets associés à l'utilisateur
+            $projects = $projectRepository->findByUser($user);
+        }
 
         return $this->render('project/index.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
-            'projects' => $projects
+            'projects' => $projects,
         ]);
     }
 
 
     #[Route('/project/form/', name: 'project_form', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectFormAdd(request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $project = new Project();
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
@@ -39,13 +53,15 @@ class ProjectController extends AbstractController
             return $this->redirectToRoute('project_index');
         }
         return $this->render('project/form.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'form' => $form
         ]);
     }
-    #[Route('/project/form/{id}', name: 'project_form_id',  methods: ['GET', 'POST']) ]
+    #[Route('/project/form/{id}', name: 'project_form_id', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectFormEdit(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
+
+
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
@@ -56,16 +72,16 @@ class ProjectController extends AbstractController
         }
 
         return $this->render('project/form.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'form' => $form->createView(),
         ]);
     }
-    
-    #[Route('/project/remove/{id}', name: 'project_remove',  methods: ['GET', 'POST'])]
+
+    #[Route('/project/remove/{id}', name: 'project_remove', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectRemove(Project $project, EntityManagerInterface $entityManagerInterface): Response
     {
         if (!$project) {
-            throw $this->createNotFoundException('Car not found');
+            throw $this->createNotFoundException('Project not found');
         }
         $entityManagerInterface->remove($project);
         $entityManagerInterface->flush();
@@ -73,9 +89,11 @@ class ProjectController extends AbstractController
         return $this->redirectToRoute('project_index');
     }
 
-    #[Route('/project/manager/{id}', name: 'project_id',  methods: ['GET', 'POST'])]
-    public function projectFind(request $request, Project $project, TaskRepository $TaskRepository): Response
+    #[Route('/project/manager/{id}', name: 'project_id', methods: ['GET', 'POST'])]
+    #[IsGranted('acces_projet', subject: 'project')]
+    public function projectFind(Project $project, TaskRepository $TaskRepository): Response
     {
+
         $tasks = $TaskRepository->findBy(['project' => $project->getId()]);
 
         if (!$project) {
@@ -83,7 +101,6 @@ class ProjectController extends AbstractController
         }
 
         return $this->render('project/project.html.twig', [
-            'current_route' => $request->attributes->get('_route'),
             'id' => $project->getId(),
             'project' => $project,
             'tasks' => $tasks

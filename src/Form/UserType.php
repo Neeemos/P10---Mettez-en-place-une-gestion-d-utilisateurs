@@ -5,12 +5,14 @@ namespace App\Form;
 use App\Entity\Project;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Role\Role;
 
 
 class UserType extends AbstractType
@@ -40,6 +42,17 @@ class UserType extends AbstractType
                 'label' => "date d'entrée",
                 'empty_data' => null,
                 'invalid_message' => 'Veuillez entrer une date valide.',
+            ])
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Roles',
+                'choices' => [
+                    'Admin' => 'ROLE_ADMIN',
+                    'User' => 'ROLE_USER',
+                ],
+                'expanded' => false, // Render as checkboxes
+                'multiple' => true, // Allow multiple selections
+                'required' => false,
+                'empty_data' => '',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',

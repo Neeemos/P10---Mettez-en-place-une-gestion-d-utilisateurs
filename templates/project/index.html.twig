@@ -1,40 +1,42 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}
     liste des projets
 {% endblock %}
 {% block header_title %}
     Projets
 {% endblock %}
-
 {% block body %}
     <div id="content">
         <div id="projects-container">
-        {% for project in projects %}
-            <article class="card-project">
-                <a href="{{ path('project_id', {'id': project.id}) }}">
-                    <h2>
-                        {{project.title}}
-                    </h2>
-                </a>
-                <div class="card-project-icons">
-                    <a href="{{ path('project_form_id', {'id': project.id}) }}">
-                        <i class="fa-solid fa-pen"></i>
+            {% for project in projects %}
+                <article class="card-project">
+                    <a href="{{ path('project_id', {'id': project.id}) }}">
+                        <h2>
+                            {{ project.title }}
+                        </h2>
                     </a>
-                    <a href="{{ path('project_remove', {'id': project.id}) }}">
-                        <i class="fa-solid fa-trash"></i>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="card-project-icons">
+                            <a href="{{ path('project_form_id', {'id': project.id}) }}">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+                            <a href="{{ path('project_remove', {'id': project.id}) }}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    {% endif %}
+                </article>
+            {% endfor %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <article class="card-project">
+                    <a href="{{ path('project_form') }}">
+                        <i class="fa-solid fa-circle-plus add-project-icon"></i>
+                        <h2>
+                            Ajouter un projet
+                        </h2>
                     </a>
-                </div>
-            </article>
-        {% endfor %}
-            <article class="card-project">
-                <a href="{{ path('project_form') }}">
-                    <i class="fa-solid fa-circle-plus add-project-icon"></i>
-                    <h2>
-                        Ajouter un projet
-                    </h2>
-                </a>
-            </article>
+                </article>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
