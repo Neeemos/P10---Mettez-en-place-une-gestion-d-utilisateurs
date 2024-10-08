@@ -38,6 +38,7 @@ class ProjectController extends AbstractController
 
 
     #[Route('/project/form/', name: 'project_form', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectFormAdd(request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -55,12 +56,11 @@ class ProjectController extends AbstractController
             'form' => $form
         ]);
     }
-    #[Route('/project/form/{id}', name: 'project_form_id',  methods: ['GET', 'POST']) ]
+    #[Route('/project/form/{id}', name: 'project_form_id', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectFormEdit(Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('acces_projet', $project)) {
-            throw $this->createNotFoundException('You cannot edit this project');
-        }
+
 
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
@@ -75,14 +75,13 @@ class ProjectController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
-    #[Route('/project/remove/{id}', name: 'project_remove',  methods: ['GET', 'POST'])]
+
+    #[Route('/project/remove/{id}', name: 'project_remove', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectRemove(Project $project, EntityManagerInterface $entityManagerInterface): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!$project) {
-            throw $this->createNotFoundException('Car not found');
+            throw $this->createNotFoundException('Project not found');
         }
         $entityManagerInterface->remove($project);
         $entityManagerInterface->flush();
@@ -90,7 +89,7 @@ class ProjectController extends AbstractController
         return $this->redirectToRoute('project_index');
     }
 
-    #[Route('/project/manager/{id}', name: 'project_id',  methods: ['GET', 'POST'])]
+    #[Route('/project/manager/{id}', name: 'project_id', methods: ['GET', 'POST'])]
     #[IsGranted('acces_projet', subject: 'project')]
     public function projectFind(Project $project, TaskRepository $TaskRepository): Response
     {

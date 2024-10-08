@@ -14,6 +14,7 @@ use App\Entity\User;
 class UserController extends AbstractController
 {
     #[Route('/user', name: 'user_list')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(request $request, UserRepository $userRepository): Response
     {
         $userList = $userRepository->findAll();
@@ -22,6 +23,7 @@ class UserController extends AbstractController
         ]);
     }
     #[Route('/user/{id}/edit', name: 'user_edit',  methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(request $request, User $user , EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         
@@ -41,6 +43,7 @@ class UserController extends AbstractController
         ]);
     }
     #[Route('/user/{id}/remove', name: 'user_remove',  methods: ['POST', 'GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function remove(request $request, User $user, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         foreach ($user->getTasks() as $task) {
