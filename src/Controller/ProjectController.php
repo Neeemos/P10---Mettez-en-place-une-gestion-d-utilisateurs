@@ -21,7 +21,7 @@ class ProjectController extends AbstractController
     public function index(ProjectRepository $projectRepository): Response
     {
         $user = $this->getUser(); // Récupère l'utilisateur connecté
-
+   
         // Vérification des rôles
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             // Si l'utilisateur est admin, on récupère tous les projets
