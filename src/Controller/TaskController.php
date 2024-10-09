@@ -4,11 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Project;
 use App\Entity\Task;
-use App\Form\ProjectType;
 use App\Form\TaskType;
-use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

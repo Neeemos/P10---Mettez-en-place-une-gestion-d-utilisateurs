@@ -68,6 +68,10 @@ nav {
     margin-top: 20px;
     text-align: center;
 }
+.text_redirection {
+  text-decoration: none;
+  color: #fff;
+}
 
 .btn {
     width: 200px;
@@ -528,7 +532,7 @@ button.button.button-submit {
   border: none;
   color: #ffffff;
   height: 70px;
-  margin-top: 5px;
+  margin: 20px 0px;
 }
 
 form ul {
