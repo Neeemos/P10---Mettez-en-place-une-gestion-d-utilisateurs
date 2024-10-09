@@ -277,11 +277,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, GoogleA
     }
     public function getGoogleAuthenticatorUsername(): string
     {
-        return $this->getEmail(); 
+        return $this->getEmail();
     }
 
-    public function getGoogleAuthenticatorSecret(): string
+    public function getGoogleAuthenticatorSecret(): ?string
     {
-        return $this->getGoogleAuthenticator(); 
+        return $this->getGoogleAuthenticator();
     }
 }

@@ -62,9 +62,8 @@ class SecurityController extends AbstractController
                 )
             );
     
-            // Générer et stocker le secret Google Authenticator
-            $user->setGoogleAuthenticator($googleAuth->generateSecret());
-    
+            $secret = $googleAuth->generateSecret();
+            $user->setGoogleAuthenticator($secret);
             $entityManager->persist($user);
             $entityManager->flush();
     
