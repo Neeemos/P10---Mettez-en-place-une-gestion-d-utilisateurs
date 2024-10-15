@@ -41,6 +41,7 @@ final class UserFactory extends PersistentProxyObjectFactory
             'password' => $this->userPasswordHasher->hashPassword(new User(), $plainPassword),
             'status' => self::faker()->randomElement(['CDI', 'CDD']),
             'surname' => self::faker()->text(10),
+            'google_authenticator' => "unset",
         ];
     }
     public function createAdmin(): User
@@ -53,6 +54,7 @@ final class UserFactory extends PersistentProxyObjectFactory
         $user->setStatus($this->defaults()['status']);
         $user->setSurname($this->defaults()['surname']);
         $user->setRoles(["ROLE_ADMIN"]);
+        $user->setGoogleAuthenticator("unset");
 
         return $user;
     }

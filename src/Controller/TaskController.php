@@ -11,12 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TaskController extends AbstractController
 {
 
     #[Route('/task/{id}/{statut}/add', name: 'project_task_add', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('acces_projet', subject: 'project')]
     public function taskFormAdd(request $request, Project $project, int $statut, EntityManagerInterface $entityManager): Response
     {
 
@@ -25,16 +26,18 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+            $this->denyAccessUnlessGranted('TASK_EDIT', $project);
             $task->setProject($project);
             $entityManager->persist($task);
             $entityManager->flush();
 
             return $this->redirectToRoute('project_id', ['id' => $project->getId()]);
+
         }
 
         return $this->render('task/form.html.twig', [
             'id' => $project->getId(),
+            'project' => $project,
             'taskId' => $task->getId(),
             'statut' => $statut,
             'form' => $form->createView()
@@ -53,7 +56,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+            $this->denyAccessUnlessGranted('TASK_EDIT', $project);
             $entityManager->flush();
 
             return $this->redirectToRoute('project_id', ['id' => $project->getId()]);
@@ -61,6 +64,7 @@ class TaskController extends AbstractController
 
         return $this->render('task/form.html.twig', [
             'id' => $project->getId(),
+            'project' => $project,
             'taskId' => $taskId,
             'statut' => $task->getStatus(),
             'form' => $form->createView()
@@ -70,7 +74,7 @@ class TaskController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function taskRemove(Project $project, int $taskId, TaskRepository $repository, EntityManagerInterface $entityManagerInterface): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->denyAccessUnlessGranted('TASK_DELETE', $project);
         $task = $repository->find($taskId);
 
         if (!$task || $task->getProject()->getId() != $project->getId()) {
