@@ -39,6 +39,15 @@ Lancez le serveur web
 ```bash
 symfony serve -d 
 ```
+
+## Note
+
+Votre service php doit inclure l'extension gd
+
+```bash
+XAMPP Ajouter a votre php.init : extension=gd
+```
+
 ## Authors
 
 - [@Neeemos](https://github.com/Neeemos)

@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ProjectController extends AbstractController
 {
 
-    #[Route('/', name: 'project_index', methods: ['GET'])]
+    #[Route('/index', name: 'project_index', methods: ['GET'])]
     public function index(ProjectRepository $projectRepository): Response
     {
         $user = $this->getUser(); // Récupère l'utilisateur connecté

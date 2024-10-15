@@ -4,11 +4,17 @@
         <h1>
             Confirmez votre connexion
         </h1>
-        <form action="{{ path('2fa_check') }}" method="post">
+        <form action="{{ path('2fa_check') }}" method="post" style="width: 55%">
             <p>
-                Scannez le QR Code avec Google
+                {% if isTwoFaEnabled %}
+                    Veuillez rentré le code de votre authentificateur
+                {% else %}
+                    Scannez le QR Code avec Google authentificateur
+                {% endif %}
             </p>
-            <img src="{{ path('2fa_qrcode') }}" alt="" class="qrcode" />
+            {% if qrCode %}
+                <img src="{{ path('2fa_qrcode') }}" alt="" class="qrcode" />
+            {% endif %}
             <div>
                 <label for="_auth_code">
                     Code  :
