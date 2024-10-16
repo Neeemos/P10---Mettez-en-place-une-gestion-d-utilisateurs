@@ -58,7 +58,7 @@ class ProjectController extends AbstractController
     }
     #[Route('/project/form/{id}', name: 'project_form_id', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function projectFormEdit(Project $project, Request $request, EntityManagerInterface $entityManager): Response
+    public function projectFormEdit(?Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
 
 
@@ -78,7 +78,7 @@ class ProjectController extends AbstractController
 
     #[Route('/project/remove/{id}', name: 'project_remove', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function projectRemove(Project $project, EntityManagerInterface $entityManagerInterface): Response
+    public function projectRemove(?Project $project, EntityManagerInterface $entityManagerInterface): Response
     {
         if (!$project) {
             throw $this->createNotFoundException('Project not found');
@@ -91,7 +91,7 @@ class ProjectController extends AbstractController
 
     #[Route('/project/manager/{id}', name: 'project_id', methods: ['GET', 'POST'])]
     #[IsGranted('acces_projet', subject: 'project')]
-    public function projectFind(Project $project, TaskRepository $TaskRepository): Response
+    public function projectFind(?Project $project, TaskRepository $TaskRepository): Response
     {
 
         $tasks = $TaskRepository->findBy(['project' => $project->getId()]);

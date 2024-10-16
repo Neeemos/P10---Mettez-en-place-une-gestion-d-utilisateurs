@@ -18,34 +18,38 @@ class TaskController extends AbstractController
 
     #[Route('/task/{id}/{statut}/add', name: 'project_task_add', methods: ['GET', 'POST'])]
     #[IsGranted('acces_projet', subject: 'project')]
-    public function taskFormAdd(request $request, Project $project, int $statut, EntityManagerInterface $entityManager): Response
+    public function taskFormAdd(Request $request, ?Project $project, int $statut, EntityManagerInterface $entityManager): Response
     {
 
+        if (!$project) {
+            throw $this->createNotFoundException('No project found for id ' . $request->get('id'));
+        }
+    
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task, ['status' => $statut]);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('TASK_EDIT', $project);
             $task->setProject($project);
             $entityManager->persist($task);
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('project_id', ['id' => $project->getId()]);
-
         }
-
+    
         return $this->render('task/form.html.twig', [
             'id' => $project->getId(),
             'project' => $project,
             'taskId' => $task->getId(),
             'statut' => $statut,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
+    
     #[Route('/task/{id}/{taskId}/edit', name: 'project_task_edit', methods: ['GET', 'POST'])]
     #[IsGranted('acces_projet', subject: 'project')]
-    public function taskFormEdit(request $request, Project $project, int $taskId, TaskRepository $taskRepository, EntityManagerInterface $entityManager): Response
+    public function taskFormEdit(request $request, ?Project $project, int $taskId, TaskRepository $taskRepository, EntityManagerInterface $entityManager): Response
     {
         $task = $taskRepository->find($taskId);
         if (!$task) {
