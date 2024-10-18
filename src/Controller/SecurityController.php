@@ -16,7 +16,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator
 class SecurityController extends AbstractController
 {
     
-    #[Route('/landing', name: 'app_security_dispatch')]
+    #[Route('/', name: 'app_security_dispatch')]
     public function dispatch(request $request): Response
     {
         return $this->render('./auth/landing.html.twig', [
@@ -58,7 +58,7 @@ class SecurityController extends AbstractController
             );
     
             $secret = $googleAuth->generateSecret();
-            $user->setGoogleAuthenticator($secret);
+            $user->setGoogleAuthenticator("unset");
             $entityManager->persist($user);
             $entityManager->flush();
     

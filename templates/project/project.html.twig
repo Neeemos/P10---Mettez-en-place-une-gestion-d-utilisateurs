@@ -52,11 +52,9 @@
                         </a>
                      {% endif %}
                   {% endfor %}
-                  {% if is_granted('ROLE_ADMIN') %}
-                     <a href="{{ path('project_task_add', {'id': id, 'statut': status}) }}" class="task-add">
-                        + Ajouter une tâche
-                     </a>
-                  {% endif %}
+                  <a href="{{ path('project_task_add', {'id': id, 'statut': status}) }}" class="task-add">
+                     + Ajouter une tâche
+                  </a>
                </div>
             </div>
          {% endfor %}

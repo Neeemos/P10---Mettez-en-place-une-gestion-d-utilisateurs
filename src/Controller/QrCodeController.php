@@ -21,6 +21,18 @@ class QrCodeController extends AbstractController
     #[Route('/2fa/qrcode', name: '2fa_qrcode')]
     public function displayGoogleAuthenticatorQrCode(GoogleAuthenticatorInterface $googleAuthenticator, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+
+        if ($user instanceof GoogleAuthenticatorTwoFactorInterface && $user->getGoogleAuthenticatorSecret() && $user->getGoogleAuthenticatorSecret() != "unset") {
+            // Si le secret existe déjà, redirige ou affiche un message indiquant que la 2FA est déjà activée
+            return new Response('La 2FA est déjà activée.', 400);
+        }
+
+        $secret = $googleAuthenticator->generateSecret();
+        $user->setGoogleAuthenticator($secret);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([])
@@ -48,9 +60,13 @@ class QrCodeController extends AbstractController
             throw new \LogicException('L\'utilisateur doit implémenter GoogleAuthenticatorTwoFactorInterface.');
         }
 
+        // Vérifier si la 2FA est déjà activée
+        $isTwoFaEnabled = $user->getGoogleAuthenticatorSecret() && $user->getGoogleAuthenticatorSecret() != "unset";
+
         // Générer le QR code, même si le secret existe déjà
         return $this->render('security/2fa.html.twig', [
             'qrCode' => $this->generateUrl('2fa_qrcode'),
+            'isTwoFaEnabled' => $isTwoFaEnabled,
         ]);
     }
 
