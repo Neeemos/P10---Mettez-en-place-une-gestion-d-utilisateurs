@@ -40,12 +40,12 @@ class ProjectVoter extends Voter
             case self::ACCESS:
             case self::TASK_ADD:
             case self::TASK_EDIT:
-                return $this->canAccessProject($user, $project);
             case self::TASK_DELETE:
+                return $this->canAccessProject($user, $project);
+            default:
                 return false; // Par défaut, seuls les admins peuvent supprimer des tâches
         }
 
-        return false;
     }
 
     private function canAccessProject(UserInterface $user, Project $project): bool

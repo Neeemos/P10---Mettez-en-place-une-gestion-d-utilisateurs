@@ -30,7 +30,7 @@ security:
                  post_only: true
                  prepare_on_login: false          
                  prepare_on_access_denied: false  
-                 default_target_path: /index 
+                 default_target_path: /project 
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

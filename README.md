@@ -45,7 +45,7 @@ symfony serve -d
 Votre service php doit inclure l'extension gd
 
 ```bash
-XAMPP Ajouter a votre php.init : extension=gd
+Ajouter a votre php.ini : extension=gd
 ```
 
 ## Authors

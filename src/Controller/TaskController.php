@@ -75,7 +75,6 @@ class TaskController extends AbstractController
         ]);
     }
     #[Route('/task/{id}/{taskId}/remove', name: 'project_task_remove', methods: ['POST', 'GET'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function taskRemove(Project $project, int $taskId, TaskRepository $repository, EntityManagerInterface $entityManagerInterface): Response
     {
         $this->denyAccessUnlessGranted('TASK_DELETE', $project);

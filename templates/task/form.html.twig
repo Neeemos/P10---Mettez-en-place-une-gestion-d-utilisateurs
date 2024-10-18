@@ -14,12 +14,9 @@
             <button type="submit" class="button button-submit">
                 Modifier
             </button>
-        {% endif %}
-
-        {% if  taskId is not null and is_granted('ROLE_ADMIN') %}
             <a href="{{ path('project_task_remove', {'id': id, 'taskId': taskId}) }}" class="delete-task">
-                Supprimer la tâche
-            </a>
+            Supprimer la tâche
+        </a>
         {% endif %}
 
         {% if app.request.attributes.get('_route') == 'project_task_add' and (is_granted('ROLE_ADMIN') or is_granted('acces_projet', project))%}
